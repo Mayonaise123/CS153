@@ -285,16 +285,11 @@ Improve the PDF parser and resolver to handle author-year citation styles reliab
 
 ## AI Usage Disclosure
 
-### Claude (Anthropic) — used throughout development
-
 | Area | Usage |
 |------|-------|
-| Agent prompts | All five agent were improved with Claude |
+| Agent prompts | All five agent were improved with Claude and Gemini|
 | Debugging | FastAPI, asyncio, httpx, and rate limiting issues debugged with Claude |
 | Frontend | `App.jsx` designed and written with Claude's assistance |
-
-### Claude Sonnet (via OpenRouter) — runtime LLM
-Powers all five agents in the live pipeline. `temperature=0` is set throughout for deterministic, reproducible results.
 
 ---
 
