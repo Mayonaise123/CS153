@@ -155,7 +155,7 @@ All five agents use `temperature=0` for deterministic, reproducible outputs. Wit
 The fetcher caches results by DOI or title. Papers cited multiple times in one document are only fetched once, cutting API calls roughly in half.
 
 **Binary classification for evaluation**
-The verifier outputs three classes. For evaluation and the dashboard summary we collapse these into binary: `supported` = Safe, everything else = Needs Flagging. This reflects the practical goal of surfacing citations that warrant human review, regardless of degree of mismatch.
+The verifier outputs three classes. For evaluation and the dashboard summary collapsed into binary: `supported` = Safe, everything else = Needs Flagging. This reflects the practical goal of surfacing citations that warrant human review, regardless of degree of mismatch.
 
 **Majority voting in evaluation**
 The evaluation script runs each verification three times and takes the majority verdict. This reduces sensitivity to LLM non-determinism and produces more stable benchmark numbers.
@@ -166,7 +166,7 @@ The evaluation script runs each verification three times and takes the majority 
 
 ### Ground Truth Dataset
 
-We built a manually labeled evaluation dataset of **40 claims** across four well-known papers:
+I built a manually labeled evaluation dataset of **40 claims** across four well-known papers:
 
 | Paper | Claims | Notes |
 |-------|--------|-------|
