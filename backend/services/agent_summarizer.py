@@ -2,6 +2,9 @@ import httpx
 import json
 import os
 from typing import List, Dict
+from dotenv import load_dotenv
+from pathlib import Path
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env", override=True)
 
 SUMMARIZER_API_KEY = os.getenv("SUMMARIZER_API_KEY", "")
 MODEL = "anthropic/claude-sonnet-4-6"
@@ -55,6 +58,7 @@ async def summarize_results(results: List[Dict]) -> Dict:
             json={
                 "model": MODEL,
                 "max_tokens": 600,
+                "temperature": 0,
                 "messages": [{"role": "user", "content": prompt}],
             },
         )

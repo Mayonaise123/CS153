@@ -1,0 +1,523 @@
+{
+  "1_Recurrent neural networks have been firmly establi": {
+    "id": "1",
+    "claim": "Recurrent neural networks have been firmly established as state of the art approaches in sequence modeling [13].",
+    "ground_truth": "partially_supported",
+    "predicted": "supported",
+    "confidence": 72,
+    "explanation": "The paper's abstract explicitly states that LSTM networks 'have received a wealth of coverage in scientific journals, technical blogs, and implementation guides' due to 'their effectiveness in broad practical applications,' which is consistent with the claim that RNNs are established as state-of-the-art in sequence modeling. The paper's focus on fundamentals of RNN and LSTM networks as important sequence modeling tools further supports this framing.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": false
+  },
+  "2_Attention mechanisms allow modeling of dependencie": {
+    "id": "2",
+    "claim": "Attention mechanisms allow modeling of dependencies without regard to their distance in the input or output sequences [2].",
+    "ground_truth": "partially_supported",
+    "predicted": "supported",
+    "confidence": 78,
+    "explanation": "The Bahdanau et al. (2014) paper introduces the attention mechanism for neural machine translation, allowing the model to focus on relevant parts of the source sentence regardless of their position when generating each target word. This is consistent with the claim that attention mechanisms allow modeling dependencies without regard to distance in sequences.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": false
+  },
+  "3_Deep residual learning uses skip connections to al": {
+    "id": "3",
+    "claim": "Deep residual learning uses skip connections to allow training of very deep networks [11].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 98,
+    "explanation": "The paper presents a residual learning framework where layers are reformulated to learn residual functions with reference to layer inputs (i.e., skip connections), enabling training of networks up to 152 layers deep. This is entirely consistent with the claim that deep residual learning uses skip connections to allow training of very deep networks.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "4_Layer normalization reduces training time by norma": {
+    "id": "4",
+    "claim": "Layer normalization reduces training time by normalizing along the feature dimension [1].",
+    "ground_truth": "partially_supported",
+    "predicted": "partially_supported",
+    "confidence": 72,
+    "explanation": "The paper supports that layer normalization reduces training time, but the claim's specification that it normalizes 'along the feature dimension' is slightly imprecise \u2014 the paper describes normalizing across 'all of the summed inputs to the neurons in a layer on a single training case,' which is the feature/layer dimension rather than the batch dimension. However, the key mechanism is correct and consistent with the claim.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": true
+  },
+  "5_The Adam optimizer uses a fixed learning rate thro": {
+    "id": "5",
+    "claim": "The Adam optimizer uses a fixed learning rate throughout training [20].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 97,
+    "explanation": "The Adam paper explicitly describes an algorithm with *adaptive* estimates of learning rates based on first and second moment estimates of gradients, meaning the effective learning rate changes for each parameter throughout training. The claim that Adam uses a 'fixed learning rate' directly contradicts Adam's core mechanism of adaptive per-parameter learning rates.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "6_Dropout was originally proposed for use in convolu": {
+    "id": "6",
+    "claim": "Dropout was originally proposed for use in convolutional neural networks [33].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "vote_distribution": {},
+    "match": false
+  },
+  "7_Byte-pair encoding was shown to outperform word-le": {
+    "id": "7",
+    "claim": "Byte-pair encoding was shown to outperform word-level models on all translation benchmarks [31].",
+    "ground_truth": "partially_supported",
+    "predicted": "partially_supported",
+    "confidence": 75,
+    "explanation": "The paper shows BPE-based subword models improve over a back-off dictionary baseline on WMT 15 tasks, but the claim that BPE 'outperforms word-level models on ALL translation benchmarks' is overstated. The abstract specifically compares against a 'back-off dictionary baseline,' not word-level models generally, and results are reported only for English-German and English-Russian, not 'all translation benchmarks.'",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": true
+  },
+  "8_Convolutional sequence to sequence models require ": {
+    "id": "8",
+    "claim": "Convolutional sequence to sequence models require O(1) operations to relate any two positions [9].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 85,
+    "explanation": "The claim that convolutional seq2seq models require O(1) operations to relate any two positions is incorrect. Convolutional models actually require O(n/k) or O(log_k(n)) operations (depending on architecture) to relate distant positions, not O(1). O(1) operations per layer is a property of self-attention (as described in 'Attention Is All You Need'). The abstract of this paper does not support the O(1) claim and instead highlights parallelization and fixed non-linearities as advantages.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 2,
+      "cannot_determine": 1
+    },
+    "match": true
+  },
+  "9_Label smoothing was shown to improve BLEU scores w": {
+    "id": "9",
+    "claim": "Label smoothing was shown to improve BLEU scores without any tradeoff in perplexity [36].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The cited paper is about Inception architecture for computer vision (image classification on ILSVRC), not about machine translation or BLEU scores. It does not discuss label smoothing's effect on BLEU scores or perplexity tradeoffs. The claim about BLEU scores improvement without perplexity tradeoff is from a different context entirely.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "10_End-to-end memory networks perform well on questio": {
+    "id": "10",
+    "claim": "End-to-end memory networks perform well on question answering and language modeling [34].",
+    "ground_truth": "supported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The cited paper is about using end-to-end memory networks for stance detection and fake news challenge tasks, not about question answering or language modeling. The claim references performance on QA and language modeling, which are completely different applications from what this paper addresses.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 2,
+      "cannot_determine": 1
+    },
+    "match": false
+  },
+  "11_Self-attention has been used for reading comprehen": {
+    "id": "11",
+    "claim": "Self-attention has been used for reading comprehension and abstractive summarization [4].",
+    "ground_truth": "partially_supported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not parse verifier response",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "cannot_determine": 2,
+      "unsupported": 1
+    },
+    "match": false
+  },
+  "12_The gated recurrent unit was shown to outperform L": {
+    "id": "12",
+    "claim": "The gated recurrent unit was shown to outperform LSTM on all sequence modeling tasks [7].",
+    "ground_truth": "unsupported",
+    "predicted": "partially_supported",
+    "confidence": 95,
+    "explanation": "The paper does compare GRU and LSTM, but finds them 'comparable' rather than GRU outperforming LSTM on all tasks. The claim overstates the findings by asserting GRU outperforms LSTM on 'all sequence modeling tasks,' when the paper actually concludes they perform similarly.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": false
+  },
+  "13_Factorization tricks for LSTMs reduce the number o": {
+    "id": "13",
+    "claim": "Factorization tricks for LSTMs reduce the number of parameters by decomposing weight matrices [21].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 99,
+    "explanation": "The paper directly describes factorization tricks for LSTMs that reduce the number of parameters by decomposing weight matrices, specifically describing 'matrix factorization by design' of LSTM matrix into the product of two smaller matrices.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "14_Google's neural machine translation system achieve": {
+    "id": "14",
+    "claim": "Google's neural machine translation system achieved human parity on Chinese-English translation [38].",
+    "ground_truth": "unsupported",
+    "predicted": "partially_supported",
+    "confidence": 82,
+    "explanation": "The paper describes Google's Neural Machine Translation system (GNMT) and its improvements, but the abstract does not claim human parity on Chinese-English translation. The paper's title mentions 'bridging the gap' (not achieving parity), and the benchmarks mentioned are English-to-French and English-to-German, not Chinese-English. The claim of 'human parity' on Chinese-English is an overstatement of what this paper demonstrates.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": false
+  },
+  "15_Sequence to sequence learning with neural networks": {
+    "id": "15",
+    "claim": "Sequence to sequence learning with neural networks first introduced the encoder-decoder architecture [35].",
+    "ground_truth": "partially_supported",
+    "predicted": "partially_supported",
+    "confidence": 72,
+    "explanation": "The paper does present an encoder-decoder style architecture using LSTMs, but it did not 'first introduce' the encoder-decoder architecture. The encoder-decoder concept was also independently proposed around the same time by Cho et al. (2014), and the claim of being 'first' is an overstatement not supported by the paper itself.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": true
+  },
+  "16_Studies have shown that transformer models are bio": {
+    "id": "16",
+    "claim": "Studies have shown that transformer models are biologically inspired by the human visual cortex [41].",
+    "ground_truth": "unsupported",
+    "predicted": "partially_supported",
+    "confidence": 65,
+    "explanation": "The paper supports that transformer models are inspired by biological attention mechanisms from the brain, but the claim specifically states inspiration from the 'human visual cortex,' while the paper focuses more broadly on brain attention systems (dorsal and ventral attention networks), not specifically the visual cortex. The claim overstates the specificity of the biological inspiration.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": false
+  },
+  "17_Recent work proves that self-attention is equivale": {
+    "id": "17",
+    "claim": "Recent work proves that self-attention is equivalent to Turing-complete computation in all cases [42].",
+    "ground_truth": "unsupported",
+    "predicted": "partially_supported",
+    "confidence": 78,
+    "explanation": "The paper does show Transformer (which uses self-attention) to be Turing complete, consistent with the claim's direction. However, the claim says 'in all cases,' which overstates the finding \u2014 the paper shows Turing completeness under specific conditions ('exclusively based on their capacity to compute and access internal dense representations') and identifies 'minimal sets of elements needed to obtain these completeness results,' implying it's not unconditional.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": false
+  },
+  "18_Positional encodings were first proposed by Schmid": {
+    "id": "18",
+    "claim": "Positional encodings were first proposed by Schmidhuber in 1992 for sequence processing [43].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "vote_distribution": {},
+    "match": false
+  },
+  "19_Adam updates network weights by maintaining separa": {
+    "id": "19",
+    "claim": "Adam updates network weights by maintaining separate, adaptive learning rates for each parameter based on estimates of the first and second moments of the gradients [19].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 97,
+    "explanation": "The Adam paper explicitly describes an algorithm that maintains adaptive learning rates for each parameter based on estimates of first and second moments of gradients. The abstract states it is 'based on adaptive estimates of lower-order moments,' which directly corresponds to the claim about first and second moment estimates driving separate adaptive learning rates per parameter.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "20_The authors of Adam proved that their method guara": {
+    "id": "20",
+    "claim": "The authors of Adam proved that their method guarantees global optimization convergence on highly non-convex loss surfaces within a fixed number of epochs [19].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 97,
+    "explanation": "The Adam paper explicitly analyzes convergence under the 'online convex optimization framework' and provides regret bounds, not guarantees of global optimization convergence on non-convex loss surfaces within a fixed number of epochs. The claim misrepresents the paper's theoretical contributions in multiple ways.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "21_Empirical results show that Adam scales efficientl": {
+    "id": "21",
+    "claim": "Empirical results show that Adam scales efficiently to large datasets and high-dimensional parameter spaces with minimal hyperparameter tuning [19].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 92,
+    "explanation": "The Adam paper's abstract directly states it is 'well suited for problems that are large in terms of data and/or parameters' and that 'hyper-parameters have intuitive interpretations and typically require little tuning,' which aligns with the claim about scaling to large datasets and high-dimensional parameter spaces with minimal hyperparameter tuning. The abstract also confirms empirical results demonstrate Adam works well in practice.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "22_Adam's hyperparameter beta_1 is strictly designate": {
+    "id": "22",
+    "claim": "Adam's hyperparameter beta_1 is strictly designated to control the decay rate of the exponential moving average of the squared gradients [19].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The claim reverses the roles of Adam's hyperparameters. In the Adam paper, beta_1 controls the decay rate of the exponential moving average of the *gradients* (first moment), while beta_2 controls the decay rate of the exponential moving average of the *squared gradients* (second moment). The claim incorrectly assigns beta_1's role to the squared gradients.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 2,
+      "cannot_determine": 1
+    },
+    "match": true
+  },
+  "23_The AdaMax variant, introduced in the same framewo": {
+    "id": "23",
+    "claim": "The AdaMax variant, introduced in the same framework, extends Adam by utilizing the infinity norm to bound parameter updates [19].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 97,
+    "explanation": "The abstract explicitly states 'we discuss AdaMax, a variant of Adam based on the infinity norm,' which directly confirms that AdaMax is introduced in the same paper as Adam and is based on the infinity norm, consistent with the claim that it extends Adam by utilizing the infinity norm to bound parameter updates.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "24_Batch normalization accelerates neural network tra": {
+    "id": "24",
+    "claim": "Batch normalization accelerates neural network training by drastically reducing internal covariate shift [24].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 99,
+    "explanation": "The paper's title and abstract directly support the claim: it explicitly states that batch normalization accelerates deep network training by addressing internal covariate shift through normalizing layer inputs. The abstract confirms that BN 'achieves the same accuracy with 14 times fewer training steps,' demonstrating accelerated training.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "25_During inference, batch normalization uses the exa": {
+    "id": "25",
+    "claim": "During inference, batch normalization uses the exact mean and variance computed from the specific test mini-batch to normalize activations [24].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 92,
+    "explanation": "The claim states that batch normalization uses the exact mean and variance from the test mini-batch during inference, but the Batch Normalization paper by Ioffe and Szegedy specifies the opposite: during inference, population statistics (running averages of mean and variance computed during training) are used, not the statistics of the specific test mini-batch. The paper explicitly describes using fixed population statistics at test time for deterministic outputs.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "26_Batch normalization functions as a regularizer, re": {
+    "id": "26",
+    "claim": "Batch normalization functions as a regularizer, reducing the absolute necessity for other regularization techniques like dropout in some architectures [24].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 98,
+    "explanation": "The paper explicitly states that Batch Normalization 'in some cases eliminates the need for Dropout,' directly supporting the claim that it functions as a regularizer reducing the necessity for dropout in some architectures.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "27_Applying batch normalization allows models to achi": {
+    "id": "27",
+    "claim": "Applying batch normalization allows models to achieve state-of-the-art results using much higher learning rates while remaining stable [24].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 97,
+    "explanation": "The paper explicitly states that Batch Normalization 'allows us to use much higher learning rates' and demonstrates state-of-the-art results on ImageNet classification, directly supporting the claim about higher learning rates and stability.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "28_Ioffe and Szegedy demonstrated that batch normaliz": {
+    "id": "28",
+    "claim": "Ioffe and Szegedy demonstrated that batch normalization completely eliminates the need for any non-linear activation functions in deep networks [24].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 99,
+    "explanation": "The paper makes no claim about eliminating non-linear activation functions. In fact, it addresses problems with 'saturating nonlinearities,' implying nonlinear activations are still used. The paper's claim is about reducing internal covariate shift and, in some cases, eliminating the need for Dropout \u2014 not non-linear activations.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "29_GloVe combines the advantages of global matrix fac": {
+    "id": "29",
+    "claim": "GloVe combines the advantages of global matrix factorization methods and local context window methods for word representation [29].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 99,
+    "explanation": "The abstract explicitly states that GloVe is 'a new global log-bilinear regression model that combines the advantages of the two major model families in the literature: global matrix factorization and local context window methods,' which directly matches the claim.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "30_The GloVe model outperforms previous skip-gram arc": {
+    "id": "30",
+    "claim": "The GloVe model outperforms previous skip-gram architectures on word analogy tasks while using significantly fewer training epochs [29].",
+    "ground_truth": "supported",
+    "predicted": "partially_supported",
+    "confidence": 62,
+    "explanation": "The abstract confirms GloVe outperforms related models on word analogy tasks (75% performance), which is consistent with the claim. However, the abstract makes no mention of 'significantly fewer training epochs' compared to skip-gram architectures, and the claim specifically attributes the training efficiency advantage to fewer epochs, which cannot be verified from the provided text.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "partially_supported": 3
+    },
+    "match": false
+  },
+  "31_GloVe relies on a log-bilinear model structure whe": {
+    "id": "31",
+    "claim": "GloVe relies on a log-bilinear model structure where the dot product of two word vectors equals the absolute raw co-occurrence count [29].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not parse verifier response",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "cannot_determine": 2,
+      "partially_supported": 1
+    },
+    "match": false
+  },
+  "32_The weighting function in GloVe is designed to pre": {
+    "id": "32",
+    "claim": "The weighting function in GloVe is designed to prevent frequent words from dominating the loss by capping their maximum impact [29].",
+    "ground_truth": "supported",
+    "predicted": "cannot_determine",
+    "confidence": 45,
+    "explanation": "The abstract describes GloVe as a global log-bilinear regression model that trains on nonzero co-occurrence elements, but does not mention the weighting function or its role in preventing frequent words from dominating the loss. The specific technical detail about the weighting function capping frequent word impact is a known feature of GloVe described in the full paper, but cannot be confirmed from this abstract alone.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "cannot_determine": 3
+    },
+    "match": false
+  },
+  "33_Pennington et al. showed that GloVe vectors provid": {
+    "id": "33",
+    "claim": "Pennington et al. showed that GloVe vectors provide a mathematically perfect, error-free mapping of semantic relationships with 100% precision [29].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 99,
+    "explanation": "The paper explicitly reports 75% performance on a word analogy task, which directly contradicts the claim of '100% precision' and a 'mathematically perfect, error-free mapping.' The paper makes no such claim of perfection; rather, it presents GloVe as an improvement over prior methods with measurable but imperfect performance.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "34_Batch normalization was originally demonstrated to": {
+    "id": "34",
+    "claim": "Batch normalization was originally demonstrated to be highly effective when applied to recurrent neural networks for text classification [24].",
+    "ground_truth": "partially_supported",
+    "predicted": "unsupported",
+    "confidence": 97,
+    "explanation": "The paper demonstrates batch normalization's effectiveness on image classification (ImageNet), not recurrent neural networks for text classification. The abstract explicitly describes application to 'state-of-the-art image classification model' and ImageNet results, with no mention of RNNs or text classification.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": false
+  },
+  "35_The Adam optimizer includes a bias correction mech": {
+    "id": "35",
+    "claim": "The Adam optimizer includes a bias correction mechanism to compensate for the fact that moment estimates are initialized at zero [19].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 95,
+    "explanation": "The cited paper is the original Adam paper by Kingma and Ba, which explicitly introduces Adam's bias correction mechanism to counteract the zero-initialization of first and second moment estimates. This is a core component of the Adam algorithm described in this paper.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "supported": 3
+    },
+    "match": true
+  },
+  "36_GloVe vectors are trained on the full, dense co-oc": {
+    "id": "36",
+    "claim": "GloVe vectors are trained on the full, dense co-occurrence matrix containing all zero entries to ensure global context preservation [29].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 99,
+    "explanation": "The paper explicitly states the opposite of the claim: GloVe trains 'only on the nonzero elements in a word-word co-occurrence matrix, rather than on the entire sparse matrix.' The claim that GloVe uses the full dense matrix including all zero entries directly contradicts the paper's stated methodology.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "37_Recent benchmarks verify that GloVe word vectors m": {
+    "id": "37",
+    "claim": "Recent benchmarks verify that GloVe word vectors maintain absolute state-of-the-art performance on all modern language understanding tasks compared to transformers [29].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 99,
+    "explanation": "The GloVe paper (2014) makes no claims about maintaining state-of-the-art performance compared to transformers, which didn't exist at the time of publication. In fact, the claim is factually wrong \u2014 transformers and models like BERT have substantially outperformed GloVe on modern language understanding benchmarks, and the GloVe paper itself only benchmarks against word2vec and matrix factorization methods from 2014.",
+    "fetch_status": "found_cache",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "38_A 2021 study by Zhao et al. proved that Adam is ma": {
+    "id": "38",
+    "claim": "A 2021 study by Zhao et al. proved that Adam is mathematically identical to standard stochastic gradient descent when momentum parameters are omitted [38].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 97,
+    "explanation": "The cited paper is a 2025 work by Meterez et al. about batch size scheduling (Seesaw), not a 2021 study by Zhao et al. Furthermore, the paper does not claim Adam is mathematically identical to standard SGD when momentum parameters are omitted; instead, it treats normalized SGD as a 'tractable proxy for Adam' under specific conditions, which is a different and weaker claim.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "39_An extended analysis shows that batch normalizatio": {
+    "id": "39",
+    "claim": "An extended analysis shows that batch normalization scales linearly with batch sizes up to 1 million samples without accuracy degradation [39].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 99,
+    "explanation": "The cited paper is about observational constraints on asymptotic safety inflation in gravity's rainbow framework, dealing with cosmological inflation, Ricci scalars, and CMB measurements. It has absolutely nothing to do with batch normalization or machine learning scaling with batch sizes.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  },
+  "40_Global vector spaces have been demonstrated to exh": {
+    "id": "40",
+    "claim": "Global vector spaces have been demonstrated to exhibit geometric symmetry directly isomorphic to quantum vector spaces [40].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The cited paper is about cognitive and cultural topology of linguistic categories using hyperbolic geometry for semantic-pragmatic mapping in NLP. It does not discuss global vector spaces exhibiting geometric symmetry isomorphic to quantum vector spaces, which is a completely different topic.",
+    "fetch_status": "found_title",
+    "vote_distribution": {
+      "unsupported": 3
+    },
+    "match": true
+  }
+}

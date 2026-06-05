@@ -1,54 +1,96 @@
 import { useState, useRef, useCallback } from 'react'
 
-const API_BASE = ''
-
-// ── Palette & tokens ──────────────────────────────────────────────
+// ── Design tokens ─────────────────────────────────────────────────
 const C = {
-  bg: '#0a0a0f',
-  surface: '#111118',
-  border: '#1e1e2e',
-  borderBright: '#2d2d45',
-  text: '#e8e6f0',
-  muted: '#6b6880',
-  accent: '#c8b5ff',
-  accentDim: '#7c6aad',
-  green: '#4ade80',
-  yellow: '#facc15',
-  red: '#f87171',
-  orange: '#fb923c',
-  blue: '#60a5fa',
+  bg: '#FAFAF8',
+  surface: '#FFFFFF',
+  surfaceAlt: '#F5F4F0',
+  border: '#E8E6E0',
+  borderStrong: '#D4D0C8',
+  text: '#1A1916',
+  textMid: '#4A4844',
+  textMuted: '#8A8880',
+  accent: '#1B4332',
+  accentLight: '#D1FAE5',
+  accentMid: '#2D6A4F',
+  green: '#166534',
+  greenBg: '#F0FDF4',
+  greenBorder: '#BBF7D0',
+  yellow: '#92400E',
+  yellowBg: '#FFFBEB',
+  yellowBorder: '#FDE68A',
+  red: '#991B1B',
+  redBg: '#FEF2F2',
+  redBorder: '#FECACA',
+  orange: '#9A3412',
+  orangeBg: '#FFF7ED',
+  orangeBorder: '#FED7AA',
+  gray: '#374151',
+  grayBg: '#F9FAFB',
+  grayBorder: '#E5E7EB',
 }
 
 const VERDICT_CONFIG = {
-  supported: { label: 'Supported', color: C.green, bg: '#052e16', icon: '✓' },
-  partially_supported: { label: 'Partial', color: C.yellow, bg: '#1c1a00', icon: '◑' },
-  unsupported: { label: 'Unsupported', color: C.red, bg: '#2d0a0a', icon: '✗' },
-  cannot_determine: { label: 'Undetermined', color: C.muted, bg: '#111118', icon: '?' },
+  supported: {
+    label: 'Supported', color: C.green, bg: C.greenBg,
+    border: C.greenBorder, icon: '✓', dot: '#16A34A'
+  },
+  partially_supported: {
+    label: 'Partial', color: C.yellow, bg: C.yellowBg,
+    border: C.yellowBorder, icon: '◑', dot: '#D97706'
+  },
+  unsupported: {
+    label: 'Unsupported', color: C.red, bg: C.redBg,
+    border: C.redBorder, icon: '✗', dot: '#DC2626'
+  },
+  cannot_determine: {
+    label: 'Unverified', color: C.gray, bg: C.grayBg,
+    border: C.grayBorder, icon: '–', dot: '#9CA3AF'
+  },
 }
 
-const INTEGRITY_COLORS = (score) => {
-  if (score >= 90) return C.green
-  if (score >= 70) return C.yellow
-  if (score >= 50) return C.orange
-  return C.red
+const scoreColor = (s) => {
+  if (s >= 90) return { text: C.green, bg: C.greenBg, border: C.greenBorder }
+  if (s >= 70) return { text: C.yellow, bg: C.yellowBg, border: C.yellowBorder }
+  if (s >= 50) return { text: C.orange, bg: C.orangeBg, border: C.orangeBorder }
+  return { text: C.red, bg: C.redBg, border: C.redBorder }
 }
 
-// ── Subcomponents ─────────────────────────────────────────────────
+// ── Components ────────────────────────────────────────────────────
 function Logo() {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
       <div style={{
-        width: 32, height: 32,
-        background: `conic-gradient(from 0deg, ${C.accent}, ${C.accentDim}, ${C.accent})`,
-        borderRadius: 6,
+        width: 28, height: 28, borderRadius: 6,
+        background: C.accent,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: 14, fontWeight: 800, color: '#0a0a0f',
-        fontFamily: 'Syne, sans-serif',
-      }}>C</div>
-      <span style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 18, color: C.text, letterSpacing: '-0.5px' }}>
-        Cite<span style={{ color: C.accent }}>Claim</span>
+      }}>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 4h10M2 7h7M2 10h5" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
+          <circle cx="11" cy="9.5" r="2" stroke="white" strokeWidth="1.2"/>
+          <path d="M12.5 11L13.5 12" stroke="white" strokeWidth="1.2" strokeLinecap="round"/>
+        </svg>
+      </div>
+      <span style={{
+        fontFamily: 'Spectral, Georgia, serif',
+        fontWeight: 700, fontSize: 17,
+        color: C.text, letterSpacing: '-0.3px',
+      }}>
+        CiteClaim
       </span>
     </div>
+  )
+}
+
+function Spinner() {
+  return (
+    <div style={{
+      width: 16, height: 16, borderRadius: '50%',
+      border: `2px solid ${C.border}`,
+      borderTopColor: C.accent,
+      animation: 'spin 0.8s linear infinite',
+      flexShrink: 0,
+    }} />
   )
 }
 
@@ -57,156 +99,158 @@ function UploadZone({ onUpload, loading }) {
   const inputRef = useRef()
 
   const handleFile = useCallback((file) => {
-    if (file && file.type === 'application/pdf') onUpload(file)
+    if (file?.type === 'application/pdf') onUpload(file)
   }, [onUpload])
-
-  const handleDrop = (e) => {
-    e.preventDefault()
-    setDragging(false)
-    handleFile(e.dataTransfer.files[0])
-  }
 
   return (
     <div
       onClick={() => !loading && inputRef.current?.click()}
       onDragOver={(e) => { e.preventDefault(); setDragging(true) }}
       onDragLeave={() => setDragging(false)}
-      onDrop={handleDrop}
+      onDrop={(e) => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files[0]) }}
       style={{
-        border: `2px dashed ${dragging ? C.accent : C.borderBright}`,
-        borderRadius: 16,
-        padding: '60px 40px',
+        border: `2px dashed ${dragging ? C.accent : C.borderStrong}`,
+        borderRadius: 12,
+        padding: '52px 40px',
         textAlign: 'center',
         cursor: loading ? 'not-allowed' : 'pointer',
-        background: dragging ? '#16122a' : C.surface,
-        transition: 'all 0.2s ease',
-        position: 'relative',
-        overflow: 'hidden',
+        background: dragging ? '#F0FDF4' : C.surface,
+        transition: 'all 0.15s ease',
       }}
     >
-      {/* Subtle grid background */}
       <div style={{
-        position: 'absolute', inset: 0, opacity: 0.03,
-        backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-        backgroundSize: '40px 40px',
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{ fontSize: 48, marginBottom: 16, filter: loading ? 'grayscale(1)' : 'none' }}>📄</div>
-      <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 20, fontWeight: 700, color: C.text, marginBottom: 8 }}>
-        {loading ? 'Analyzing…' : 'Drop a research paper here'}
+        width: 48, height: 48, borderRadius: 10,
+        background: C.surfaceAlt, border: `1px solid ${C.border}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        margin: '0 auto 16px',
+      }}>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={C.textMuted} strokeWidth="1.5" strokeLinecap="round">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+          <path d="M14 2v6h6M12 18v-6M9 15l3-3 3 3"/>
+        </svg>
       </div>
-      <div style={{ fontFamily: 'Newsreader, serif', color: C.muted, fontSize: 15 }}>
-        PDF files only · Max 20MB
+      <div style={{
+        fontFamily: 'Spectral, Georgia, serif',
+        fontSize: 18, fontWeight: 600,
+        color: C.text, marginBottom: 6,
+      }}>
+        {loading ? 'Analyzing paper…' : 'Upload a research paper'}
       </div>
-
-      <input
-        ref={inputRef}
-        type="file"
-        accept=".pdf"
+      <div style={{ fontSize: 13, color: C.textMuted, fontFamily: 'system-ui, sans-serif' }}>
+        Drop a PDF here or click to browse · Max 20MB
+      </div>
+      <input ref={inputRef} type="file" accept=".pdf"
         style={{ display: 'none' }}
-        onChange={(e) => handleFile(e.target.files[0])}
-      />
+        onChange={(e) => handleFile(e.target.files[0])} />
+    </div>
+  )
+}
+
+function PipelineStep({ label, desc, status }) {
+  // status: 'done' | 'active' | 'pending'
+  return (
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+      <div style={{
+        width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+        border: `1.5px solid ${status === 'done' ? C.accent : status === 'active' ? C.accentMid : C.border}`,
+        background: status === 'done' ? C.accent : status === 'active' ? C.accentLight : C.surface,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        marginTop: 1,
+      }}>
+        {status === 'done'
+          ? <span style={{ color: 'white', fontSize: 11, fontWeight: 700 }}>✓</span>
+          : status === 'active'
+          ? <Spinner />
+          : <span style={{ color: C.border, fontSize: 11 }}>·</span>
+        }
+      </div>
+      <div>
+        <div style={{
+          fontFamily: 'system-ui, sans-serif', fontSize: 13, fontWeight: 600,
+          color: status === 'pending' ? C.textMuted : C.text,
+        }}>{label}</div>
+        <div style={{ fontSize: 12, color: C.textMuted, fontFamily: 'system-ui, sans-serif', marginTop: 1 }}>
+          {desc}
+        </div>
+      </div>
     </div>
   )
 }
 
 function AgentPipeline({ stage }) {
-  const agents = [
-    { id: 'extractor', label: 'EXTRACTOR', desc: 'Pulling cited claims' },
-    { id: 'resolver', label: 'RESOLVER', desc: 'Resolving citations' },
-    { id: 'fetcher', label: 'FETCHER', desc: 'Retrieving papers' },
-    { id: 'verifier', label: 'VERIFIER', desc: 'Checking claims' },
-    { id: 'summarizer', label: 'SUMMARIZER', desc: 'Writing report' },
+  const steps = [
+    { id: 'extractor', label: 'Extracting claims', desc: 'Identifying every cited statement' },
+    { id: 'resolver', label: 'Resolving citations', desc: 'Parsing reference metadata' },
+    { id: 'fetcher', label: 'Retrieving papers', desc: 'Fetching cited sources' },
+    { id: 'verifier', label: 'Verifying claims', desc: 'Checking semantic support' },
+    { id: 'summarizer', label: 'Generating report', desc: 'Synthesizing integrity score' },
   ]
-
-  const stageIndex = agents.findIndex(a => a.id === stage)
+  const activeIdx = steps.findIndex(s => s.id === stage)
 
   return (
-    <div style={{ margin: '32px 0', padding: '24px', background: C.surface, borderRadius: 12, border: `1px solid ${C.border}` }}>
-      <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 11, fontWeight: 700, color: C.accentDim, letterSpacing: 2, marginBottom: 20, textTransform: 'uppercase' }}>
-        5-Agent Pipeline
-      </div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto' }}>
-        {agents.map((agent, i) => {
-          const done = stageIndex > i
-          const active = stageIndex === i
-          return (
-            <div key={agent.id} style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
-              <div style={{ flex: 1, textAlign: 'center', padding: '0 4px' }}>
-                <div style={{
-                  width: 36, height: 36, borderRadius: '50%',
-                  background: done ? C.accent : active ? '#1e1a30' : C.surface,
-                  border: `2px solid ${done ? C.accent : active ? C.accentDim : C.borderBright}`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  margin: '0 auto 8px',
-                  fontSize: 14,
-                  transition: 'all 0.3s ease',
-                  boxShadow: active ? `0 0 16px ${C.accentDim}66` : 'none',
-                }}>
-                  {done ? '✓' : active ? <SpinDot /> : <span style={{ color: C.muted, fontSize: 11 }}>{i + 1}</span>}
-                </div>
-                <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 9, fontWeight: 500, color: done ? C.accent : active ? C.text : C.muted, letterSpacing: 1 }}>
-                  {agent.label}
-                </div>
-                <div style={{ fontFamily: 'Newsreader, serif', fontSize: 11, color: C.muted, marginTop: 2 }}>
-                  {agent.desc}
-                </div>
-              </div>
-              {i < agents.length - 1 && (
-                <div style={{ width: 24, height: 2, background: done ? C.accentDim : C.border, flexShrink: 0, transition: 'background 0.3s ease' }} />
-              )}
-            </div>
-          )
-        })}
+    <div style={{
+      background: C.surface, border: `1px solid ${C.border}`,
+      borderRadius: 12, padding: '24px 28px',
+    }}>
+      <div style={{
+        fontSize: 11, fontWeight: 600, letterSpacing: 1,
+        color: C.textMuted, fontFamily: 'system-ui, sans-serif',
+        textTransform: 'uppercase', marginBottom: 20,
+      }}>Analysis pipeline</div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        {steps.map((s, i) => (
+          <PipelineStep
+            key={s.id} label={s.label} desc={s.desc}
+            status={i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'pending'}
+          />
+        ))}
       </div>
     </div>
   )
 }
 
-function SpinDot() {
-  return (
-    <div style={{
-      width: 14, height: 14, borderRadius: '50%',
-      border: `2px solid ${C.accentDim}`,
-      borderTopColor: C.accent,
-      animation: 'spin 0.8s linear infinite',
-    }} />
-  )
-}
-
-function ScoreMeter({ score, label }) {
+function IntegrityScore({ score, label }) {
   if (score == null) return null
-  const color = INTEGRITY_COLORS(score)
-  const circumference = 2 * Math.PI * 45
-  const offset = circumference * (1 - score / 100)
+  const colors = scoreColor(score)
+  const r = 36, circ = 2 * Math.PI * r
+  const offset = circ * (1 - score / 100)
 
   return (
-    <div style={{ textAlign: 'center' }}>
-      <svg width={120} height={120} style={{ transform: 'rotate(-90deg)' }}>
-        <circle cx={60} cy={60} r={45} fill="none" stroke={C.border} strokeWidth={8} />
-        <circle
-          cx={60} cy={60} r={45} fill="none"
-          stroke={color} strokeWidth={8}
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          style={{ transition: 'stroke-dashoffset 1s ease' }}
-        />
-      </svg>
-      <div style={{ marginTop: -90, marginBottom: 70, fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 28, color }}>
-        {score}
+    <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
+      <div style={{ position: 'relative', width: 96, height: 96 }}>
+        <svg width="96" height="96" style={{ transform: 'rotate(-90deg)' }}>
+          <circle cx="48" cy="48" r={r} fill="none" stroke={C.border} strokeWidth="6" />
+          <circle cx="48" cy="48" r={r} fill="none"
+            stroke={colors.text} strokeWidth="6"
+            strokeDasharray={circ} strokeDashoffset={offset}
+            strokeLinecap="round"
+            style={{ transition: 'stroke-dashoffset 1s ease' }}
+          />
+        </svg>
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column',
+          alignItems: 'center', justifyContent: 'center',
+        }}>
+          <span style={{
+            fontFamily: 'Spectral, Georgia, serif',
+            fontSize: 22, fontWeight: 700, color: colors.text, lineHeight: 1,
+          }}>{score}</span>
+        </div>
       </div>
-      <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: C.muted, letterSpacing: 1 }}>
-        INTEGRITY SCORE
-      </div>
-      <div style={{
-        marginTop: 8, display: 'inline-block',
-        padding: '4px 12px', borderRadius: 20,
-        background: `${color}22`, border: `1px solid ${color}44`,
-        fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, fontWeight: 500, color,
-      }}>
-        {label}
+      <div>
+        <div style={{ fontSize: 11, fontWeight: 600, color: C.textMuted, letterSpacing: 1, textTransform: 'uppercase', fontFamily: 'system-ui, sans-serif', marginBottom: 6 }}>
+          Integrity score
+        </div>
+        <div style={{
+          display: 'inline-flex', alignItems: 'center',
+          padding: '4px 10px', borderRadius: 20,
+          background: colors.bg, border: `1px solid ${colors.border}`,
+          fontSize: 12, fontWeight: 600, color: colors.text,
+          fontFamily: 'system-ui, sans-serif',
+        }}>
+          {label}
+        </div>
       </div>
     </div>
   )
@@ -214,77 +258,88 @@ function ScoreMeter({ score, label }) {
 
 function SummaryBar({ summary, report }) {
   const stats = [
-    { key: 'supported', label: 'Supported', color: C.green },
-    { key: 'partially_supported', label: 'Partial', color: C.yellow },
-    { key: 'unsupported', label: 'Unsupported', color: C.red },
-    { key: 'cannot_determine', label: 'Unknown', color: C.muted },
-    { key: 'retracted', label: 'Retracted', color: C.orange },
+    { key: 'supported', label: 'Supported', dot: '#16A34A' },
+    { key: 'partially_supported', label: 'Partial', dot: '#D97706' },
+    { key: 'unsupported', label: 'Unsupported', dot: '#DC2626' },
+    { key: 'cannot_determine', label: 'Unverified', dot: '#9CA3AF' },
+    { key: 'retracted', label: 'Retracted', dot: '#EA580C' },
   ]
 
   return (
     <div style={{
       background: C.surface, border: `1px solid ${C.border}`,
-      borderRadius: 16, padding: 28, marginBottom: 24,
+      borderRadius: 12, overflow: 'hidden', marginBottom: 20,
     }}>
-      <div style={{ display: 'flex', gap: 40, alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      {/* Top section */}
+      <div style={{ padding: '28px 32px', display: 'flex', gap: 40, alignItems: 'center', flexWrap: 'wrap' }}>
         {report?.integrity_score != null && (
-          <ScoreMeter score={report.integrity_score} label={report.verdict_label} />
+          <IntegrityScore score={report.integrity_score} label={report.verdict_label} />
         )}
-
         <div style={{ flex: 1, minWidth: 240 }}>
-          <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, fontSize: 18, color: C.text, marginBottom: 16 }}>
-            {summary.total} Claims Analyzed
+          <div style={{
+            fontFamily: 'Spectral, Georgia, serif',
+            fontSize: 22, fontWeight: 700, color: C.text, marginBottom: 4,
+          }}>
+            {summary.total} claims analyzed
           </div>
+          {report?.summary && (
+            <p style={{
+              fontFamily: 'system-ui, sans-serif',
+              fontSize: 14, color: C.textMid, lineHeight: 1.6,
+              margin: '8px 0 16px',
+            }}>
+              {report.summary}
+            </p>
+          )}
 
           {/* Stacked bar */}
-          <div style={{ display: 'flex', height: 8, borderRadius: 4, overflow: 'hidden', marginBottom: 16, gap: 1 }}>
+          <div style={{ display: 'flex', height: 6, borderRadius: 3, overflow: 'hidden', marginBottom: 12, gap: 1 }}>
             {stats.map(s => {
               const pct = summary.total ? (summary[s.key] / summary.total) * 100 : 0
               return pct > 0 ? (
-                <div key={s.key} style={{ flex: pct, background: s.color, transition: 'flex 0.8s ease' }} />
+                <div key={s.key} style={{ flex: pct, background: s.dot, transition: 'flex 0.8s ease' }} />
               ) : null
             })}
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 20px' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 20px' }}>
             {stats.map(s => (
-              <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                <div style={{ width: 8, height: 8, borderRadius: 2, background: s.color }} />
-                <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 12, color: C.muted }}>
-                  {s.label}: <span style={{ color: s.color, fontWeight: 500 }}>{summary[s.key]}</span>
+              <div key={s.key} style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'system-ui, sans-serif' }}>
+                <div style={{ width: 7, height: 7, borderRadius: '50%', background: s.dot, flexShrink: 0 }} />
+                <span style={{ fontSize: 13, color: C.textMuted }}>
+                  {s.label}: <strong style={{ color: C.text, fontWeight: 600 }}>{summary[s.key]}</strong>
                 </span>
               </div>
             ))}
           </div>
-
-          {report?.summary && (
-            <p style={{ fontFamily: 'Newsreader, serif', fontSize: 15, color: C.muted, marginTop: 16, lineHeight: 1.6, fontStyle: 'italic' }}>
-              {report.summary}
-            </p>
-          )}
         </div>
       </div>
 
+      {/* Key concerns */}
       {report?.key_concerns?.length > 0 && (
-        <div style={{ marginTop: 24, borderTop: `1px solid ${C.border}`, paddingTop: 20 }}>
-          <div style={{ fontFamily: 'Syne, sans-serif', fontSize: 12, fontWeight: 700, color: C.accentDim, letterSpacing: 2, marginBottom: 12, textTransform: 'uppercase' }}>
-            Key Concerns
+        <div style={{ borderTop: `1px solid ${C.border}`, padding: '20px 32px', background: C.surfaceAlt }}>
+          <div style={{ fontSize: 11, fontWeight: 600, letterSpacing: 1, color: C.textMuted, textTransform: 'uppercase', fontFamily: 'system-ui, sans-serif', marginBottom: 12 }}>
+            Key concerns
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {report.key_concerns.map((c, i) => (
               <div key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <span style={{ color: C.orange, fontFamily: 'IBM Plex Mono, monospace', fontSize: 12, marginTop: 1 }}>⚠</span>
-                <span style={{ fontFamily: 'Newsreader, serif', fontSize: 14, color: C.text, lineHeight: 1.5 }}>{c}</span>
+                <span style={{ color: C.orange, fontSize: 13, marginTop: 1, flexShrink: 0 }}>⚠</span>
+                <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 13, color: C.textMid, lineHeight: 1.5 }}>{c}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
+      {/* Recommendation */}
       {report?.recommendation && (
-        <div style={{ marginTop: 16, padding: '12px 16px', background: '#0e1a0e', borderRadius: 8, border: `1px solid ${C.green}33` }}>
-          <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: C.green, letterSpacing: 1 }}>RECOMMENDATION  </span>
-          <span style={{ fontFamily: 'Newsreader, serif', fontSize: 14, color: C.text }}>{report.recommendation}</span>
+        <div style={{ borderTop: `1px solid ${C.border}`, padding: '16px 32px', display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+          <span style={{ color: C.accent, fontSize: 13, marginTop: 1, flexShrink: 0 }}>→</span>
+          <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 13, color: C.textMid, lineHeight: 1.5 }}>
+            <strong style={{ color: C.text, fontWeight: 600 }}>Recommendation: </strong>
+            {report.recommendation}
+          </span>
         </div>
       )}
     </div>
@@ -297,45 +352,51 @@ function ClaimCard({ result, index }) {
 
   return (
     <div style={{
-      background: C.surface, border: `1px solid ${C.border}`,
-      borderLeft: `3px solid ${result.is_retracted ? C.orange : vc.color}`,
-      borderRadius: 10, overflow: 'hidden',
-      transition: 'border-color 0.2s ease',
-    }}>
+      background: C.surface,
+      border: `1px solid ${C.border}`,
+      borderLeft: `3px solid ${result.is_retracted ? '#EA580C' : vc.dot}`,
+      borderRadius: 8,
+      overflow: 'hidden',
+      transition: 'box-shadow 0.15s ease',
+    }}
+    onMouseEnter={e => e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.06)'}
+    onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
+    >
       <div
         onClick={() => setExpanded(e => !e)}
-        style={{ padding: '16px 20px', cursor: 'pointer', display: 'flex', gap: 14, alignItems: 'flex-start' }}
+        style={{ padding: '14px 18px', cursor: 'pointer', display: 'flex', gap: 14, alignItems: 'flex-start' }}
       >
-        {/* Index */}
+        {/* Number */}
         <div style={{
-          fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: C.muted,
-          minWidth: 24, paddingTop: 2,
+          fontFamily: 'system-ui, sans-serif',
+          fontSize: 11, color: C.textMuted, minWidth: 22,
+          paddingTop: 3, fontVariantNumeric: 'tabular-nums',
         }}>
           {String(index + 1).padStart(2, '0')}
         </div>
 
-        {/* Main content */}
+        {/* Claim text */}
         <div style={{ flex: 1, minWidth: 0 }}>
           <p style={{
-            fontFamily: 'Newsreader, serif', fontSize: 15, color: C.text,
-            lineHeight: 1.6, margin: 0,
+            fontFamily: 'system-ui, sans-serif',
+            fontSize: 14, color: C.text, lineHeight: 1.6, margin: '0 0 6px',
             display: '-webkit-box', WebkitLineClamp: expanded ? 'unset' : 2,
             WebkitBoxOrient: 'vertical', overflow: 'hidden',
           }}>
             {result.claim}
           </p>
-
-          <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 6, alignItems: 'center', flexWrap: 'wrap' }}>
             <code style={{
-              fontFamily: 'IBM Plex Mono, monospace', fontSize: 11,
-              background: C.border, color: C.accent,
-              padding: '2px 8px', borderRadius: 4,
+              fontFamily: 'ui-monospace, monospace', fontSize: 11,
+              background: C.surfaceAlt, color: C.textMid,
+              padding: '2px 6px', borderRadius: 4,
+              border: `1px solid ${C.border}`,
             }}>
               [{result.citation_key}]
             </code>
             {result.resolved_title && (
-              <span style={{ fontFamily: 'Newsreader, serif', fontSize: 12, color: C.muted, fontStyle: 'italic' }}>
-                {result.resolved_title.slice(0, 60)}{result.resolved_title.length > 60 ? '…' : ''}
+              <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 12, color: C.textMuted }}>
+                {result.resolved_title.slice(0, 55)}{result.resolved_title.length > 55 ? '…' : ''}
               </span>
             )}
           </div>
@@ -344,52 +405,56 @@ function ClaimCard({ result, index }) {
         {/* Badges */}
         <div style={{ display: 'flex', gap: 6, flexShrink: 0, alignItems: 'center' }}>
           {result.is_retracted && (
-            <div style={{
-              padding: '4px 10px', borderRadius: 20,
-              background: `${C.orange}22`, border: `1px solid ${C.orange}55`,
-              fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, fontWeight: 500,
-              color: C.orange, letterSpacing: 0.5,
-            }}>
-              RETRACTED
-            </div>
+            <span style={{
+              fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 600,
+              padding: '3px 8px', borderRadius: 4,
+              background: C.orangeBg, color: C.orange,
+              border: `1px solid ${C.orangeBorder}`,
+            }}>RETRACTED</span>
           )}
-          <div style={{
-            padding: '4px 12px', borderRadius: 20,
-            background: `${vc.color}1a`, border: `1px solid ${vc.color}44`,
-            fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, fontWeight: 500,
-            color: vc.color, display: 'flex', alignItems: 'center', gap: 4,
+          <span style={{
+            fontFamily: 'system-ui, sans-serif', fontSize: 12, fontWeight: 500,
+            padding: '3px 10px', borderRadius: 20,
+            background: vc.bg, color: vc.color,
+            border: `1px solid ${vc.border}`,
+            display: 'flex', alignItems: 'center', gap: 4,
           }}>
-            <span>{vc.icon}</span> {vc.label}
-          </div>
-          <div style={{
-            fontFamily: 'IBM Plex Mono, monospace', fontSize: 11,
-            color: C.muted, transition: 'transform 0.2s',
+            <span style={{ fontSize: 10 }}>{vc.icon}</span> {vc.label}
+          </span>
+          <span style={{
+            fontFamily: 'system-ui, sans-serif', fontSize: 11,
+            color: C.textMuted, transition: 'transform 0.15s',
             transform: expanded ? 'rotate(180deg)' : 'none',
-          }}>▾</div>
+            display: 'inline-block',
+          }}>▾</span>
         </div>
       </div>
 
-      {/* Expanded details */}
+      {/* Expanded */}
       {expanded && (
         <div style={{
-          borderTop: `1px solid ${C.border}`, padding: '16px 20px 20px',
-          display: 'flex', flexDirection: 'column', gap: 12,
+          borderTop: `1px solid ${C.border}`,
+          background: C.surfaceAlt,
+          padding: '16px 18px 18px 54px',
+          display: 'flex', flexDirection: 'column', gap: 14,
         }}>
-          {/* Confidence bar */}
+          {/* Confidence */}
           <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: C.muted, letterSpacing: 1 }}>CONFIDENCE</span>
-              <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: vc.color }}>{result.confidence}%</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
+              <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 600, color: C.textMuted, letterSpacing: 0.5, textTransform: 'uppercase' }}>Confidence</span>
+              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: vc.color, fontWeight: 600 }}>{result.confidence}%</span>
             </div>
             <div style={{ height: 4, background: C.border, borderRadius: 2, overflow: 'hidden' }}>
-              <div style={{ height: '100%', width: `${result.confidence}%`, background: vc.color, transition: 'width 0.6s ease', borderRadius: 2 }} />
+              <div style={{ height: '100%', width: `${result.confidence}%`, background: vc.dot, borderRadius: 2, transition: 'width 0.6s ease' }} />
             </div>
           </div>
 
           {/* Explanation */}
           <div>
-            <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: C.muted, letterSpacing: 1, marginBottom: 6 }}>EXPLANATION</div>
-            <p style={{ fontFamily: 'Newsreader, serif', fontSize: 14, color: C.text, lineHeight: 1.6, margin: 0 }}>
+            <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 600, color: C.textMuted, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 5 }}>
+              Explanation
+            </div>
+            <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 13, color: C.textMid, lineHeight: 1.6, margin: 0 }}>
               {result.explanation}
             </p>
           </div>
@@ -397,38 +462,47 @@ function ClaimCard({ result, index }) {
           {/* Excerpt */}
           {result.excerpt && (
             <div>
-              <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: C.muted, letterSpacing: 1, marginBottom: 6 }}>RELEVANT EXCERPT</div>
+              <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 600, color: C.textMuted, letterSpacing: 0.5, textTransform: 'uppercase', marginBottom: 5 }}>
+                From cited paper
+              </div>
               <blockquote style={{
-                fontFamily: 'Newsreader, serif', fontSize: 13, fontStyle: 'italic',
-                color: C.muted, borderLeft: `2px solid ${C.accentDim}`,
-                paddingLeft: 12, margin: 0, lineHeight: 1.6,
+                fontFamily: 'Spectral, Georgia, serif',
+                fontSize: 13, fontStyle: 'italic',
+                color: C.textMid, lineHeight: 1.7,
+                borderLeft: `2px solid ${C.borderStrong}`,
+                paddingLeft: 12, margin: 0,
               }}>
                 {result.excerpt}
               </blockquote>
             </div>
           )}
 
-          {/* Retraction info */}
+          {/* Retraction */}
           {result.is_retracted && (
-            <div style={{ padding: '10px 14px', background: `${C.orange}11`, borderRadius: 8, border: `1px solid ${C.orange}33` }}>
-              <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: C.orange, letterSpacing: 1, marginBottom: 4 }}>⚠ RETRACTION NOTICE</div>
+            <div style={{
+              padding: '10px 14px', borderRadius: 6,
+              background: C.orangeBg, border: `1px solid ${C.orangeBorder}`,
+            }}>
+              <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 700, color: C.orange, marginBottom: 4, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                ⚠ Retraction notice
+              </div>
               {result.retraction_date && (
-                <p style={{ fontFamily: 'Newsreader, serif', fontSize: 13, color: C.text, margin: '0 0 4px' }}>
+                <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 13, color: C.textMid, margin: '0 0 2px' }}>
                   Retracted: {result.retraction_date}
                 </p>
               )}
               {result.retraction_reason && (
-                <p style={{ fontFamily: 'Newsreader, serif', fontSize: 13, color: C.muted, margin: 0 }}>
-                  Reason: {result.retraction_reason}
+                <p style={{ fontFamily: 'system-ui, sans-serif', fontSize: 13, color: C.textMuted, margin: 0 }}>
+                  {result.retraction_reason}
                 </p>
               )}
             </div>
           )}
 
-          {/* Fetch status */}
+          {/* Source */}
           <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-            <span style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: C.muted }}>Paper retrieved via:</span>
-            <code style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 10, color: C.accentDim }}>{result.fetch_status}</code>
+            <span style={{ fontFamily: 'system-ui, sans-serif', fontSize: 11, color: C.textMuted }}>Retrieved via</span>
+            <code style={{ fontFamily: 'ui-monospace, monospace', fontSize: 11, color: C.textMid }}>{result.fetch_status}</code>
           </div>
         </div>
       )}
@@ -440,12 +514,12 @@ function ResultsDashboard({ data }) {
   const [filter, setFilter] = useState('all')
 
   const filters = [
-    { key: 'all', label: 'All' },
-    { key: 'unsupported', label: 'Unsupported' },
-    { key: 'partially_supported', label: 'Partial' },
-    { key: 'supported', label: 'Supported' },
-    { key: 'retracted', label: 'Retracted' },
-    { key: 'cannot_determine', label: 'Unknown' },
+    { key: 'all', label: 'All claims', count: data.results.length },
+    { key: 'unsupported', label: 'Unsupported', count: data.summary.unsupported },
+    { key: 'partially_supported', label: 'Partial', count: data.summary.partially_supported },
+    { key: 'supported', label: 'Supported', count: data.summary.supported },
+    { key: 'retracted', label: 'Retracted', count: data.summary.retracted },
+    { key: 'cannot_determine', label: 'Unverified', count: data.summary.cannot_determine },
   ]
 
   const filtered = data.results.filter(r => {
@@ -459,39 +533,32 @@ function ResultsDashboard({ data }) {
       <SummaryBar summary={data.summary} report={data.integrity_report} />
 
       {/* Filter tabs */}
-      <div style={{ display: 'flex', gap: 4, marginBottom: 16, flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: 4, marginBottom: 14, flexWrap: 'wrap' }}>
         {filters.map(f => (
-          <button
-            key={f.key}
-            onClick={() => setFilter(f.key)}
-            style={{
-              padding: '6px 14px', borderRadius: 20,
-              border: `1px solid ${filter === f.key ? C.accent : C.border}`,
-              background: filter === f.key ? `${C.accent}18` : 'transparent',
-              color: filter === f.key ? C.accent : C.muted,
-              fontFamily: 'IBM Plex Mono, monospace', fontSize: 11,
-              cursor: 'pointer', transition: 'all 0.15s ease',
-            }}
-          >
+          <button key={f.key} onClick={() => setFilter(f.key)} style={{
+            fontFamily: 'system-ui, sans-serif', fontSize: 12, fontWeight: 500,
+            padding: '5px 12px', borderRadius: 6,
+            border: `1px solid ${filter === f.key ? C.accent : C.border}`,
+            background: filter === f.key ? C.accent : C.surface,
+            color: filter === f.key ? 'white' : C.textMid,
+            cursor: 'pointer', transition: 'all 0.12s ease',
+          }}>
             {f.label}
-            <span style={{ marginLeft: 6, opacity: 0.6 }}>
-              {f.key === 'all' ? data.results.length
-                : f.key === 'retracted' ? data.summary.retracted
-                : data.summary[f.key] ?? 0}
-            </span>
+            <span style={{ marginLeft: 5, opacity: 0.7, fontWeight: 400 }}>{f.count}</span>
           </button>
         ))}
       </div>
 
-      {/* Claims list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        {filtered.length === 0 ? (
-          <div style={{ fontFamily: 'Newsreader, serif', color: C.muted, textAlign: 'center', padding: 40 }}>
-            No claims match this filter.
-          </div>
-        ) : filtered.map((r, i) => (
-          <ClaimCard key={i} result={r} index={data.results.indexOf(r)} />
-        ))}
+      {/* Claims */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {filtered.length === 0
+          ? <div style={{ fontFamily: 'system-ui, sans-serif', color: C.textMuted, textAlign: 'center', padding: 40, fontSize: 14 }}>
+              No claims match this filter.
+            </div>
+          : filtered.map((r, i) => (
+              <ClaimCard key={i} result={r} index={data.results.indexOf(r)} />
+            ))
+        }
       </div>
     </div>
   )
@@ -499,7 +566,7 @@ function ResultsDashboard({ data }) {
 
 // ── Main App ──────────────────────────────────────────────────────
 export default function App() {
-  const [state, setState] = useState('idle') // idle | loading | done | error
+  const [state, setState] = useState('idle')
   const [pipelineStage, setPipelineStage] = useState(null)
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
@@ -511,32 +578,27 @@ export default function App() {
     setData(null)
     setError(null)
 
-    // Simulate stage progression while waiting
     const stages = ['extractor', 'resolver', 'fetcher', 'verifier', 'summarizer']
     let si = 0
     setPipelineStage(stages[0])
-    const stageTimer = setInterval(() => {
+    const timer = setInterval(() => {
       si = Math.min(si + 1, stages.length - 1)
       setPipelineStage(stages[si])
-    }, 4000)
+    }, 5000)
 
     try {
       const formData = new FormData()
       formData.append('file', file)
-
       const res = await fetch('/analyze', { method: 'POST', body: formData })
-      clearInterval(stageTimer)
-
+      clearInterval(timer)
       if (!res.ok) {
         const err = await res.json().catch(() => ({ detail: 'Unknown error' }))
         throw new Error(err.detail || `HTTP ${res.status}`)
       }
-
-      const result = await res.json()
-      setData(result)
+      setData(await res.json())
       setState('done')
     } catch (err) {
-      clearInterval(stageTimer)
+      clearInterval(timer)
       setError(err.message)
       setState('error')
     }
@@ -545,104 +607,109 @@ export default function App() {
   return (
     <div style={{ minHeight: '100vh', background: C.bg, color: C.text }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400&display=swap');
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         body { background: ${C.bg}; }
-        button { outline: none; }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: ${C.surface}; }
-        ::-webkit-scrollbar-thumb { background: ${C.borderBright}; border-radius: 3px; }
+        button { outline: none; font-family: inherit; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: ${C.borderStrong}; border-radius: 3px; }
       `}</style>
 
       {/* Header */}
       <header style={{
-        borderBottom: `1px solid ${C.border}`,
-        padding: '16px 32px',
+        background: C.surface, borderBottom: `1px solid ${C.border}`,
+        padding: '0 32px', height: 56,
         display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         position: 'sticky', top: 0, zIndex: 10,
-        background: `${C.bg}dd`, backdropFilter: 'blur(12px)',
       }}>
         <Logo />
-        <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: C.muted }}>
-          5-Agent Citation Integrity System
-        </div>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
-          {['EXTRACTOR', 'RESOLVER', 'RETRACTION', 'VERIFIER', 'SUMMARIZER'].map(a => (
+        <div style={{ display: 'flex', gap: 6 }}>
+          {['Extractor', 'Resolver', 'Retraction', 'Verifier', 'Summarizer'].map(a => (
             <div key={a} style={{
-              fontFamily: 'IBM Plex Mono, monospace', fontSize: 9,
-              padding: '3px 7px', borderRadius: 4,
-              background: C.surface, border: `1px solid ${C.border}`,
-              color: C.accentDim, letterSpacing: 0.5,
+              fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 500,
+              padding: '3px 8px', borderRadius: 4,
+              background: C.surfaceAlt, border: `1px solid ${C.border}`,
+              color: C.textMuted,
             }}>{a}</div>
           ))}
         </div>
+        <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 12, color: C.textMuted }}>
+          Citation Integrity Verifier
+        </div>
       </header>
 
-      <main style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px' }}>
+      <main style={{ maxWidth: 860, margin: '0 auto', padding: '48px 24px' }}>
 
-        {/* Hero text — only on idle */}
+        {/* Hero */}
         {state === 'idle' && (
-          <div style={{ marginBottom: 48, animation: 'fadeIn 0.5s ease' }}>
-            <h1 style={{
-              fontFamily: 'Syne, sans-serif', fontWeight: 800,
-              fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1.1,
-              color: C.text, marginBottom: 16,
-              letterSpacing: '-1px',
+          <div style={{ marginBottom: 40, animation: 'fadeUp 0.4s ease' }}>
+            <div style={{
+              display: 'inline-block',
+              fontFamily: 'system-ui, sans-serif', fontSize: 11, fontWeight: 600,
+              letterSpacing: 1.5, textTransform: 'uppercase',
+              color: C.accentMid, marginBottom: 16,
             }}>
-              Does this paper mean<br />
-              <span style={{
-                background: `linear-gradient(135deg, ${C.accent}, ${C.accentDim})`,
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              }}>
-                what they claim it does?
-              </span>
+              Academic integrity tool
+            </div>
+            <h1 style={{
+              fontFamily: 'Spectral, Georgia, serif',
+              fontWeight: 700, fontSize: 'clamp(28px, 4vw, 44px)',
+              lineHeight: 1.15, color: C.text,
+              letterSpacing: '-0.5px', marginBottom: 16,
+            }}>
+              Does this paper actually say<br />what they claim it does?
             </h1>
-            <p style={{ fontFamily: 'Newsreader, serif', fontSize: 18, color: C.muted, lineHeight: 1.7, maxWidth: 560 }}>
-              CiteClaim runs five AI agents to extract every cited claim, resolve and fetch cited papers, check for retractions, and verify whether citations actually support what authors say they do.
+            <p style={{
+              fontFamily: 'system-ui, sans-serif',
+              fontSize: 16, color: C.textMid,
+              lineHeight: 1.7, maxWidth: 520, marginBottom: 28,
+            }}>
+              CiteClaim verifies every citation in a research paper — checking whether cited sources genuinely support the claims made about them.
             </p>
-
-            <div style={{ display: 'flex', gap: 12, marginTop: 24, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 40 }}>
               {[
-                { icon: '🔍', text: 'Claim extraction' },
-                { icon: '🧩', text: 'Citation resolution' },
-                { icon: '🚫', text: 'Retraction detection' },
-                { icon: '⚖️', text: 'Semantic verification' },
-                { icon: '📊', text: 'Integrity scoring' },
+                '🔍 Claim extraction',
+                '🧩 Citation resolution',
+                '🚫 Retraction detection',
+                '⚖️ Semantic verification',
+                '📊 Integrity scoring',
               ].map(f => (
-                <div key={f.text} style={{
-                  display: 'flex', alignItems: 'center', gap: 6,
-                  padding: '6px 12px', borderRadius: 20,
-                  border: `1px solid ${C.border}`, background: C.surface,
-                  fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: C.muted,
-                }}>
-                  <span>{f.icon}</span>{f.text}
-                </div>
+                <div key={f} style={{
+                  fontFamily: 'system-ui, sans-serif', fontSize: 12, fontWeight: 500,
+                  padding: '5px 12px', borderRadius: 20,
+                  border: `1px solid ${C.border}`,
+                  background: C.surface, color: C.textMid,
+                }}>{f}</div>
               ))}
             </div>
           </div>
         )}
 
-        {/* Upload zone — shown when idle or done */}
+        {/* Upload */}
         {(state === 'idle' || state === 'done' || state === 'error') && (
-          <UploadZone onUpload={handleUpload} loading={false} />
+          <div style={{ marginBottom: state === 'done' ? 40 : 0 }}>
+            <UploadZone onUpload={handleUpload} loading={false} />
+          </div>
         )}
 
-        {/* Loading state */}
+        {/* Loading */}
         {state === 'loading' && (
-          <div style={{ animation: 'fadeIn 0.3s ease' }}>
+          <div style={{ animation: 'fadeUp 0.3s ease' }}>
             <div style={{
-              padding: '20px 24px', background: C.surface,
-              border: `1px solid ${C.border}`, borderRadius: 12, marginBottom: 8,
-              display: 'flex', alignItems: 'center', gap: 12,
+              background: C.surface, border: `1px solid ${C.border}`,
+              borderRadius: 10, padding: '16px 20px',
+              display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16,
             }}>
-              <SpinDot />
+              <Spinner />
               <div>
-                <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 600, fontSize: 15, color: C.text }}>
+                <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 14, fontWeight: 600, color: C.text }}>
                   Analyzing {filename}
                 </div>
-                <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 11, color: C.muted, marginTop: 2 }}>
-                  This may take 30–90 seconds depending on citation count
+                <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 12, color: C.textMuted, marginTop: 2 }}>
+                  This takes 1–3 minutes depending on citation count
                 </div>
               </div>
             </div>
@@ -653,37 +720,37 @@ export default function App() {
         {/* Error */}
         {state === 'error' && (
           <div style={{
-            marginTop: 24, padding: '16px 20px',
-            background: '#2d0a0a', border: `1px solid ${C.red}44`,
-            borderRadius: 12, animation: 'fadeIn 0.3s ease',
+            marginTop: 20, padding: '14px 18px',
+            background: C.redBg, border: `1px solid ${C.redBorder}`,
+            borderRadius: 8, animation: 'fadeUp 0.3s ease',
           }}>
-            <div style={{ fontFamily: 'Syne, sans-serif', fontWeight: 700, color: C.red, marginBottom: 4 }}>Analysis failed</div>
-            <div style={{ fontFamily: 'IBM Plex Mono, monospace', fontSize: 12, color: C.muted }}>{error}</div>
+            <div style={{ fontFamily: 'system-ui, sans-serif', fontWeight: 600, color: C.red, fontSize: 14, marginBottom: 4 }}>
+              Analysis failed
+            </div>
+            <div style={{ fontFamily: 'ui-monospace, monospace', fontSize: 12, color: C.textMid }}>{error}</div>
           </div>
         )}
 
         {/* Results */}
         {state === 'done' && data && (
-          <div style={{ marginTop: 40, animation: 'fadeIn 0.5s ease' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <div style={{ animation: 'fadeUp 0.4s ease' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 20 }}>
               <div>
-                <h2 style={{ fontFamily: 'Syne, sans-serif', fontWeight: 800, fontSize: 24, color: C.text }}>
-                  Results
-                </h2>
-                <div style={{ fontFamily: 'Newsreader, serif', fontSize: 13, color: C.muted, marginTop: 2, fontStyle: 'italic' }}>
+                <h2 style={{
+                  fontFamily: 'Spectral, Georgia, serif',
+                  fontWeight: 700, fontSize: 24, color: C.text,
+                }}>Results</h2>
+                <div style={{ fontFamily: 'system-ui, sans-serif', fontSize: 12, color: C.textMuted, marginTop: 3 }}>
                   {filename}
                 </div>
               </div>
-              <button
-                onClick={() => setState('idle')}
-                style={{
-                  fontFamily: 'IBM Plex Mono, monospace', fontSize: 11,
-                  color: C.accentDim, background: 'none',
-                  border: `1px solid ${C.borderBright}`, borderRadius: 8,
-                  padding: '8px 16px', cursor: 'pointer',
-                }}
-              >
-                ← New Paper
+              <button onClick={() => setState('idle')} style={{
+                fontFamily: 'system-ui, sans-serif', fontSize: 12, fontWeight: 500,
+                color: C.textMid, background: C.surface,
+                border: `1px solid ${C.border}`, borderRadius: 6,
+                padding: '7px 14px', cursor: 'pointer',
+              }}>
+                ← Analyze another paper
               </button>
             </div>
             <ResultsDashboard data={data} />

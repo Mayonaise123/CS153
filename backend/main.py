@@ -14,8 +14,8 @@ from services.agent_verifier import verify_claim
 from services.agent_summarizer import summarize_results
 from services.paper_fetcher import fetch_paper
 
-load_dotenv()
-load_retraction_db()  # Downloads latest CSV from GitLab on startup
+load_dotenv(override=True)
+# load_retraction_db()  # Downloads latest CSV from GitLab on startup
 logging.basicConfig(level=logging.INFO, format="%(message)s")
 
 app = FastAPI(title="CiteClaim API — 5-Agent Pipeline")
@@ -63,15 +63,9 @@ async def analyze_paper(file: UploadFile = File(...)):
         claims = await extract_claims(paper_text)
         logging.info(f"Extracted {len(claims)} claims")
     except Exception as e:
+        import traceback
+        logging.info(f"EXTRACTOR FAILED: {traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=f"Extractor agent failed: {str(e)}")
-
-    if not claims:
-        return JSONResponse({
-            "summary": {"total": 0, "supported": 0, "partially_supported": 0,
-                        "unsupported": 0, "cannot_determine": 0, "retracted": 0},
-            "integrity_report": None,
-            "results": [],
-        })
 
     # Step 3: Agent RESOLVER — clean up citation metadata for each claim
     logging.info(f"\n[RESOLVER] Resolving {len(claims)} citations...")
@@ -101,8 +95,12 @@ async def analyze_paper(file: UploadFile = File(...)):
     for idx, (claim, resolved_meta) in enumerate(resolved_pairs):
         title_str = str(resolved_meta.get("title", "?"))[:60]
         logging.info(f"  [{idx+1}/{len(resolved_pairs)}] {title_str}")
-        cited_text, fetch_status = await fetch_paper(resolved_meta)
-        logging.info(f"  -> {fetch_status} | has_text={bool(cited_text)}")
+        cited_text, fetch_status, fetched_doi = await fetch_paper(resolved_meta)
+        # Use fetched DOI if resolver didn't find one
+        if fetched_doi and not resolved_meta.get("doi"):
+            resolved_meta["doi"] = fetched_doi
+            logging.info(f"  -> DOI found via S2: {fetched_doi}")
+        logging.info(f"  -> {fetch_status} | has_text={bool(cited_text)} | doi={resolved_meta.get('doi','none')}")
         fetch_results.append((claim, resolved_meta, cited_text, fetch_status))
 
     # Step 5: Agents RETRACTION + VERIFIER run in parallel per claim

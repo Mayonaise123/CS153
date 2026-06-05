@@ -2,8 +2,12 @@ import httpx
 import json
 import os
 from typing import Dict
+from dotenv import load_dotenv
+from pathlib import Path
+load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env", override=True)
 
 RESOLVER_API_KEY = os.getenv("RESOLVER_API_KEY", "")
+
 MODEL = "anthropic/claude-sonnet-4-6"
 
 RESOLVER_PROMPT = """You are Agent RESOLVER, specialized in parsing academic citation strings into structured metadata for paper lookup.
@@ -39,6 +43,7 @@ async def resolve_citation(raw_ref: str) -> Dict:
             json={
                 "model": MODEL,
                 "max_tokens": 300,
+                "temperature": 0,
                 "messages": [{"role": "user", "content": prompt}],
             },
         )

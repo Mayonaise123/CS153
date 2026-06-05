@@ -1,0 +1,182 @@
+[
+  {
+    "id": "1",
+    "claim": "Recurrent neural networks have been firmly established as state of the art approaches in sequence modeling [13].",
+    "ground_truth": "supported",
+    "predicted": "partially_supported",
+    "confidence": 45,
+    "explanation": "The cited paper discusses RNNs and LSTMs as effective approaches for practical applications, which implicitly supports their status as strong sequence modeling methods, but the abstract does not explicitly claim RNNs are 'firmly established as state of the art' in sequence modeling. The paper is primarily a tutorial/derivation document rather than a comparative study establishing state-of-the-art status.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "2",
+    "claim": "Attention mechanisms allow modeling of dependencies without regard to their distance in the input or output sequences [2].",
+    "ground_truth": "supported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "3",
+    "claim": "Deep residual learning uses skip connections to allow training of very deep networks [11].",
+    "ground_truth": "supported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "4",
+    "claim": "Layer normalization reduces training time by normalizing along the feature dimension [1].",
+    "ground_truth": "supported",
+    "predicted": "partially_supported",
+    "confidence": 72,
+    "explanation": "The paper does support that layer normalization reduces training time, but the claim that it normalizes 'along the feature dimension' is an oversimplification. The paper specifies that layer normalization computes mean and variance from 'all of the summed inputs to the neurons in a layer on a single training case,' which is normalization across all features within a single training example, not merely 'along the feature dimension' as a standalone descriptor.",
+    "fetch_status": "found_author",
+    "match": false
+  },
+  {
+    "id": "5",
+    "claim": "The Adam optimizer uses a fixed learning rate throughout training [20].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "6",
+    "claim": "Dropout was originally proposed for use in convolutional neural networks [33].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "7",
+    "claim": "Byte-pair encoding was shown to outperform word-level models on all translation benchmarks [31].",
+    "ground_truth": "partially_supported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "8",
+    "claim": "Convolutional sequence to sequence models require O(1) operations to relate any two positions [9].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 85,
+    "explanation": "The abstract of the cited paper does not mention O(1) operations to relate any two positions. In fact, convolutional models require O(n/k) operations to relate distant positions (where k is kernel size), not O(1) \u2014 that property belongs to self-attention mechanisms. The abstract only mentions parallelization and fixed non-linearities, not constant-time position relationships.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "9",
+    "claim": "Label smoothing was shown to improve BLEU scores without any tradeoff in perplexity [36].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The cited paper (Rethinking the Inception Architecture for Computer Vision) is a computer vision paper focused on CNN architectures for image classification, not machine translation. It does not contain BLEU scores or perplexity measurements, and any label smoothing results would be on ImageNet classification, not translation tasks.",
+    "fetch_status": "found_author",
+    "match": true
+  },
+  {
+    "id": "10",
+    "claim": "End-to-end memory networks perform well on question answering and language modeling [34].",
+    "ground_truth": "supported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The cited paper is about stance detection and fake news challenge tasks, not question answering or language modeling. It does not discuss or demonstrate end-to-end memory networks performing well on question answering or language modeling tasks.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "11",
+    "claim": "Self-attention has been used for reading comprehension and abstractive summarization [4].",
+    "ground_truth": "partially_supported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "12",
+    "claim": "The gated recurrent unit was shown to outperform LSTM on all sequence modeling tasks [7].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "13",
+    "claim": "Factorization tricks for LSTMs reduce the number of parameters by decomposing weight matrices [21].",
+    "ground_truth": "supported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "14",
+    "claim": "Google's neural machine translation system achieved human parity on Chinese-English translation [38].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 92,
+    "explanation": "The paper describes 'bridging the gap' between human and machine translation and reports a 60% reduction in errors compared to Google's phrase-based system, but does not claim human parity was achieved on Chinese-English translation. The benchmarks mentioned are WMT'14 English-to-French and English-to-German, not Chinese-English.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "15",
+    "claim": "Sequence to sequence learning with neural networks first introduced the encoder-decoder architecture [35].",
+    "ground_truth": "partially_supported",
+    "predicted": "unsupported",
+    "confidence": 90,
+    "explanation": "The Sutskever et al. (2014) paper did not first introduce the encoder-decoder architecture; that concept was introduced earlier by Cho et al. (2014) ('Learning Phrase Representations using RNN Encoder-Decoder') and Kalchbrenner & Blunsom (2013). Sutskever et al. applied a multilayered LSTM-based sequence-to-sequence approach but did not originate the encoder-decoder paradigm.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "16",
+    "claim": "Studies have shown that transformer models are biologically inspired by the human visual cortex [41].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "17",
+    "claim": "Recent work proves that self-attention is equivalent to Turing-complete computation in all cases [42].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "18",
+    "claim": "Positional encodings were first proposed by Schmidhuber in 1992 for sequence processing [43].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  }
+]

@@ -1,0 +1,182 @@
+[
+  {
+    "id": "1",
+    "claim": "Recurrent neural networks have been firmly established as state of the art approaches in sequence modeling [13].",
+    "ground_truth": "supported",
+    "predicted": "partially_supported",
+    "confidence": 55,
+    "explanation": "The paper discusses RNN and LSTM effectiveness in broad practical applications, which implicitly supports the notion of RNNs as strong approaches in sequence modeling, but the abstract does not explicitly state that RNNs are 'firmly established as state of the art' in sequence modeling. The paper is primarily a tutorial/derivation document rather than an empirical comparison establishing state-of-the-art status.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "2",
+    "claim": "Attention mechanisms allow modeling of dependencies without regard to their distance in the input or output sequences [2].",
+    "ground_truth": "supported",
+    "predicted": "partially_supported",
+    "confidence": 55,
+    "explanation": "The Bahdanau et al. (2014) paper introduces an attention mechanism that allows the model to focus on relevant parts of the source sentence regardless of position, which partially supports the claim about modeling dependencies without regard to distance. However, the specific framing of 'without regard to distance in input or output sequences' is more precisely articulated in the 'Attention is All You Need' paper (Vaswani et al., 2017), which explicitly makes this claim. Bahdanau et al. implicitly demonstrates this property but does not explicitly state it in the terms used in the claim.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "3",
+    "claim": "Deep residual learning uses skip connections to allow training of very deep networks [11].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 95,
+    "explanation": "The cited paper directly introduces residual learning with skip connections (shortcut connections) to enable training of very deep networks, as evidenced by the abstract describing networks up to 152 layers deep that are easier to optimize due to the residual framework.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "4",
+    "claim": "Layer normalization reduces training time by normalizing along the feature dimension [1].",
+    "ground_truth": "supported",
+    "predicted": "partially_supported",
+    "confidence": 72,
+    "explanation": "The paper does support that layer normalization reduces training time, but the claim that it normalizes 'along the feature dimension' is an incomplete characterization. The paper specifies that layer normalization computes mean and variance from all summed inputs to neurons in a layer on a single training case, which is normalization across features/neurons within a layer for a single example, not simply 'along the feature dimension' as the claim states.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "5",
+    "claim": "The Adam optimizer uses a fixed learning rate throughout training [20].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 98,
+    "explanation": "Adam is explicitly an adaptive learning rate method that computes individual adaptive learning rates for each parameter based on estimates of first and second moments of the gradients \u2014 the opposite of a fixed learning rate. The abstract describes it as based on 'adaptive estimates of lower-order moments,' directly contradicting the claim of a fixed learning rate.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "6",
+    "claim": "Dropout was originally proposed for use in convolutional neural networks [33].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  },
+  {
+    "id": "7",
+    "claim": "Byte-pair encoding was shown to outperform word-level models on all translation benchmarks [31].",
+    "ground_truth": "partially_supported",
+    "predicted": "unsupported",
+    "confidence": 85,
+    "explanation": "The paper compares subword models (including BPE) against a back-off dictionary baseline, not against word-level models broadly, and only on two translation tasks (English-German and English-Russian), not 'all translation benchmarks.' The claim that BPE outperforms word-level models on all benchmarks is an overstatement not supported by the abstract's content.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "8",
+    "claim": "Convolutional sequence to sequence models require O(1) operations to relate any two positions [9].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 60,
+    "explanation": "The abstract does not mention O(1) operations to relate any two positions. In fact, convolutional models typically require O(n/k) or O(log(n)) operations to relate distant positions depending on architecture, not O(1). The abstract only discusses parallelization and fixed non-linearities, not the specific complexity claim about relating positions.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "9",
+    "claim": "Label smoothing was shown to improve BLEU scores without any tradeoff in perplexity [36].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 97,
+    "explanation": "The cited paper (Szegedy et al., 2015, 'Rethinking the Inception Architecture for Computer Vision') is a computer vision paper focused on image classification on ILSVRC, not machine translation. It does not discuss BLEU scores or perplexity, and while it does introduce label smoothing as a regularization technique, it evaluates it on image classification metrics\u2014not on the translation metrics claimed. The specific claim about BLEU scores and perplexity tradeoffs is not supported by this paper.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "10",
+    "claim": "End-to-end memory networks perform well on question answering and language modeling [34].",
+    "ground_truth": "supported",
+    "predicted": "unsupported",
+    "confidence": 95,
+    "explanation": "The cited paper is about stance detection and fake news classification using end-to-end memory networks, not about question answering or language modeling. The claim describes end-to-end memory networks performing well on QA and language modeling tasks, which corresponds to the original End-to-End Memory Networks paper by Sukhbaatar et al. (2015), not this paper.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "11",
+    "claim": "Self-attention has been used for reading comprehension and abstractive summarization [4].",
+    "ground_truth": "partially_supported",
+    "predicted": "unsupported",
+    "confidence": 90,
+    "explanation": "The cited paper focuses on LSTM-based machine reading with memory networks for language modeling, sentiment analysis, and natural language inference \u2014 not reading comprehension or abstractive summarization. Additionally, the paper uses neural attention within an LSTM framework, not self-attention as a standalone mechanism.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "12",
+    "claim": "The gated recurrent unit was shown to outperform LSTM on all sequence modeling tasks [7].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 98,
+    "explanation": "The paper explicitly states that 'GRU' was found to be 'comparable to LSTM,' not superior on all tasks. The claim that GRU outperforms LSTM on all sequence modeling tasks directly contradicts the paper's conclusion.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "13",
+    "claim": "Factorization tricks for LSTMs reduce the number of parameters by decomposing weight matrices [21].",
+    "ground_truth": "supported",
+    "predicted": "supported",
+    "confidence": 99,
+    "explanation": "The abstract explicitly describes 'matrix factorization by design' of LSTM matrix into the product of two smaller matrices, which directly supports the claim that factorization tricks reduce parameters by decomposing weight matrices.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "14",
+    "claim": "Google's neural machine translation system achieved human parity on Chinese-English translation [38].",
+    "ground_truth": "unsupported",
+    "predicted": "unsupported",
+    "confidence": 92,
+    "explanation": "The paper describes bridging the gap between human and machine translation and reducing errors by 60% compared to phrase-based systems, but does not claim to achieve human parity on Chinese-English translation. The benchmarks mentioned are WMT'14 English-to-French and English-to-German, not Chinese-English.",
+    "fetch_status": "found_title",
+    "match": true
+  },
+  {
+    "id": "15",
+    "claim": "Sequence to sequence learning with neural networks first introduced the encoder-decoder architecture [35].",
+    "ground_truth": "partially_supported",
+    "predicted": "unsupported",
+    "confidence": 85,
+    "explanation": "The claim states that Sutskever et al. (2014) 'first introduced' the encoder-decoder architecture, but this is historically inaccurate. The encoder-decoder architecture was introduced concurrently by Cho et al. (2014) ('Learning Phrase Representations using RNN Encoder-Decoder'), and Sutskever et al. themselves build upon related prior work. The paper does use an encoder-decoder-style architecture (one LSTM encodes input, another decodes), but it does not claim to have first introduced this concept. The abstract describes using one LSTM to map input to a fixed vector and another to decode, but makes no claim of being the originator of the encoder-decoder paradigm.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "16",
+    "claim": "Studies have shown that transformer models are biologically inspired by the human visual cortex [41].",
+    "ground_truth": "unsupported",
+    "predicted": "partially_supported",
+    "confidence": 55,
+    "explanation": "The cited paper does discuss transformer-based models being inspired by biological attention mechanisms in the human brain (dorsal and ventral attention systems), but the claim specifically states 'human visual cortex' as the biological inspiration, whereas the paper focuses more broadly on brain attention systems rather than specifically the visual cortex. Additionally, the inspiration is from attention mechanisms, not the visual cortex per se.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "17",
+    "claim": "Recent work proves that self-attention is equivalent to Turing-complete computation in all cases [42].",
+    "ground_truth": "unsupported",
+    "predicted": "partially_supported",
+    "confidence": 82,
+    "explanation": "The paper does prove Turing completeness of the Transformer (which uses self-attention), but the claim that self-attention is equivalent to Turing-complete computation 'in all cases' overstates the findings. The paper shows Turing completeness under specific conditions related to the capacity to compute and access internal dense representations, not universally in all cases.",
+    "fetch_status": "found_title",
+    "match": false
+  },
+  {
+    "id": "18",
+    "claim": "Positional encodings were first proposed by Schmidhuber in 1992 for sequence processing [43].",
+    "ground_truth": "unsupported",
+    "predicted": "cannot_determine",
+    "confidence": 0,
+    "explanation": "Could not retrieve cited paper",
+    "fetch_status": "not_found",
+    "match": false
+  }
+]
